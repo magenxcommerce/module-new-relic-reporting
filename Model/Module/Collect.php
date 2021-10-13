@@ -11,9 +11,6 @@ use Magento\Framework\Module\ModuleListInterface;
 use Magento\NewRelicReporting\Model\Config;
 use Magento\NewRelicReporting\Model\Module;
 
-/**
- * Class for collecting data for the report
- */
 class Collect
 {
     /**
@@ -95,6 +92,7 @@ class Collect
      * @param string $active
      * @param string $setupVersion
      * @param string $state
+     *
      * @return array
      */
     protected function getNewModuleChanges($moduleName, $active, $setupVersion, $state)
@@ -279,7 +277,9 @@ class Collect
                 $changes = array_diff($module, $changeTest);
                 $changesCleanArray = $this->getCleanChangesArray($changes);
 
-                if (!empty($changesCleanArray)) {
+                if (count($changesCleanArray) > 0 ||
+                    ($this->moduleManager->isOutputEnabled($changeTest['name']) &&
+                        $module['setup_version'] != null)) {
                     $data = [
                         'entity_id' => $changeTest['entity_id'],
                         'name' => $changeTest['name'],
